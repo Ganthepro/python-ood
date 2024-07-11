@@ -11,16 +11,14 @@ def encodemsg(q1: Queue, q2: Queue):
         new_ord = ord(i) + q2.items[q2_index]
         if i.islower():
             start = 97
-            end = 112
+            end = 122
         else:
             start = 65
             end = 90
-        print(new_ord, chr(new_ord), end, en_lst)
         if new_ord > end:
             temp = new_ord - end
             new_ord = start + (temp - 1)
         en_lst.append(chr(new_ord))
-        print(new_ord, chr(new_ord), end, en_lst)
         q2_index += 1
     return en_lst
 
@@ -33,7 +31,7 @@ def decodemsg(q1: Queue, q2: Queue):
         new_ord = ord(i) - q2.items[q2_index]
         if i.islower():
             start = 97
-            end = 112
+            end = 122
         else:
             start = 65
             end = 90
