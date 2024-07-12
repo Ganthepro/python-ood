@@ -1,53 +1,92 @@
+class Customer:
+    def __init__(self, order_time: int, order_duration: int, id: int) -> None:
+        self.__order_time = order_time
+        self.__order_duration = order_duration
+        self.__id = id
+
+    @property
+    def order_time(self):
+        return self.__order_time
+    
+    @property
+    def order_duration(self):
+        return self.__order_duration
+
+    @property
+    def id(self):
+        return self.__id
+    
 class Queue:
-    def __init__(self, time = None, max = None) -> None:
-        self.__items = []
-        self.__time = time
-        self.__max = max
-
-    def push(self, data):
-        self.__items.append(data)
-
-    def pop(self):
-        try:
-            temp = self.__items[0]
-            self.__items.pop(0)
-            return temp
-        except:
-            pass
-
-    def size(self):
-        return len(self.__items)
+    def __init__(self):
+        self.__customers: list[Customer] = []
+        self.__time_orders = []
 
     @property
-    def items(self):
-        return self.__items
+    def customers(self):
+        return self.__customers
     
     @property
-    def time(self):
-        return self.__time
+    def time_orders(self):
+        return self.__time_orders
     
-    @property
-    def max(self):
-        return self.__max
+    def get_sum_of_order_times(self):
+        return sum([n[0] for n in self.__time_orders])
+    
+    def get_sum_result(self, data):
+        if len(self.__time_orders) > 0:
+            if self.__time_orders[-1][0] > data.order_time:
+                return [data.order_time + data.order_duration + (self.__time_orders[-1][0] - data.order_time), data.id, self.__time_orders[-1][0] - data.order_time]
+            else:
+                return [data.order_time + data.order_duration, data.id]
 
-inp = input("Enter people : ")
-q_main = Queue()
-q_1 = Queue(3, 5)
-q_2 = Queue(2, 5)
+    def push(self, data: Customer):
+        self.__customers.append(data)
+        if len(self.__time_orders) > 0:
+            if self.__time_orders[-1][0] > data.order_time:
+                self.__time_orders.append([data.order_time + data.order_duration + (self.__time_orders[-1][0] - data.order_time), data.id, self.__time_orders[-1][0] - data.order_time])
+            else:
+                self.__time_orders.append([data.order_time + data.order_duration, data.id])
+        else:
+            self.__time_orders.append([data.order_time + data.order_duration, data.id])
+        # print(self.__time_orders)
 
-for i in inp:
-    q_main.push(i)
+print(" ***Cafe***")
+inp = input("Log : ").split("/")
+customers = []
+b1 = Queue()
+b2 = Queue()
 
-time = 1
-while q_main.size() > 0:
-    temp = q_main.pop()
-    if q_1.size() < q_1.max:
-        q_1.push(temp)
+for i ,j in enumerate(inp):
+    t, d = j.split(",")
+    customer = Customer(int(t), int(d), i + 1)
+    # print(b1.get_sum_of_order_times(), b2.get_sum_of_order_times())
+    # print(f"b1: {b1.get_sum_result(customer)}")
+    # print(f"b2: {b2.get_sum_result(customer)}")
+    if b1.get_sum_of_order_times() <= b2.get_sum_of_order_times():
+        b1.push(customer)
     else:
-        q_2.push(temp)
-    print(f"{time} {q_main.items} {q_1.items} {q_2.items}")
-    if (q_1.time % time == 0 or time % q_1.time == 0) and time > 1:
-        q_1.pop()
-    if q_2.time % (time + 1) == 0 or (time + 1) % q_2.time == 0:
-        q_2.pop()
-    time += 1
+        b2.push(customer)
+
+print(b1.time_orders, b2.time_orders)
+merge = b1.time_orders + b2.time_orders
+for i in range(len(merge)):
+    for j in range(i, len(merge)):
+        if merge[i][0] > merge[j][0]:
+            temp = merge[j]
+            merge[j] = merge[i]
+            merge[i] = temp
+
+highest = [0, 0]
+for m in merge:
+    print(f"Time {m[0]} customer {m[1]} get coffee")
+    try:
+        if m[2] > highest[1]:
+            highest = [m[1], m[2]]
+    except:
+        pass
+
+if highest[1] == 0:
+    print("No waiting")
+else:
+    print(f"The customer who waited the longest is : {highest[0]}")
+    print(f"The customer waited for {highest[1]} minutes")

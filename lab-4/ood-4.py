@@ -46,8 +46,6 @@ for i in inp:
     b2.update_queun(int(t))
     if b1.next_order <= b2.next_order:
         b1.push(Customer(int(t), int(d), inp.index(i) + 1))
-        # print(f"b1", end=" ")
-        # b1.show_customers()
     else:
         b2.push(Customer(int(t), int(d), inp.index(i) + 1))
         # print(f"b2", end=" ")
