@@ -33,7 +33,10 @@ class Stack:
     @property
     def items(self):
         if len(self.__items) == 0:
-            return "Empty"
+            if self.__type == "mirror":
+                return "ytpmE"
+            else:
+                return "Empty"
         return reversed(self.__items)
     
     @property
@@ -60,7 +63,7 @@ class Stack:
                 self.__counter += 1
                 if self.__type == "mirror":
                     self.__bomb.append(data)
-                print(data)
+                # print(data)
                 return
         self.__items.append(data)
 
@@ -80,10 +83,10 @@ S_m = Stack("mirror")
 S_n = Stack("normal")
 
 normal, mirror = inp.split()
-for m in mirror:
+for m in reversed(mirror):
     S_m.push(m)
 
-for b in reversed(S_m.bomb):
+for b in S_m.bomb:
     S_n.bomb_queue.push(b)
 
 for n in normal:
@@ -101,5 +104,5 @@ if S_n.failed_counter > 0:
 print("------------MIRROR------------")
 print(reversed_word("MIRROR :"))
 print(S_m.size())
-print(reversed_word("".join(S_m.items)))
+print("".join(S_m.items))
 print(f"(RORRIM) ! ! ! (s)evisolpxE {S_m.counter}")
