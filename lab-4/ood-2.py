@@ -38,6 +38,8 @@ class Queue:
                 return [data.order_time + data.order_duration + (self.__time_orders[-1][0] - data.order_time), data.id, self.__time_orders[-1][0] - data.order_time]
             else:
                 return [data.order_time + data.order_duration, data.id]
+        else:
+            return [data.order_time + data.order_duration, data.id]
 
     def push(self, data: Customer):
         self.__customers.append(data)
@@ -48,7 +50,6 @@ class Queue:
                 self.__time_orders.append([data.order_time + data.order_duration, data.id])
         else:
             self.__time_orders.append([data.order_time + data.order_duration, data.id])
-        # print(self.__time_orders)
 
 print(" ***Cafe***")
 inp = input("Log : ").split("/")
@@ -59,19 +60,19 @@ b2 = Queue()
 for i ,j in enumerate(inp):
     t, d = j.split(",")
     customer = Customer(int(t), int(d), i + 1)
-    # print(b1.get_sum_of_order_times(), b2.get_sum_of_order_times())
-    # print(f"b1: {b1.get_sum_result(customer)}")
-    # print(f"b2: {b2.get_sum_result(customer)}")
-    if b1.get_sum_of_order_times() <= b2.get_sum_of_order_times():
+    if b1.get_sum_result(customer)[0] <= b2.get_sum_result(customer)[0]:
         b1.push(customer)
     else:
         b2.push(customer)
 
-print(b1.time_orders, b2.time_orders)
 merge = b1.time_orders + b2.time_orders
 for i in range(len(merge)):
     for j in range(i, len(merge)):
         if merge[i][0] > merge[j][0]:
+            temp = merge[j]
+            merge[j] = merge[i]
+            merge[i] = temp
+        elif merge[i][0] == merge[j][0] and merge[i][1] > merge[j][1]:
             temp = merge[j]
             merge[j] = merge[i]
             merge[i] = temp
