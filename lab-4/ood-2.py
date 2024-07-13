@@ -43,13 +43,7 @@ class Queue:
 
     def push(self, data: Customer):
         self.__customers.append(data)
-        if len(self.__time_orders) > 0:
-            if self.__time_orders[-1][0] > data.order_time:
-                self.__time_orders.append([data.order_time + data.order_duration + (self.__time_orders[-1][0] - data.order_time), data.id, self.__time_orders[-1][0] - data.order_time])
-            else:
-                self.__time_orders.append([data.order_time + data.order_duration, data.id])
-        else:
-            self.__time_orders.append([data.order_time + data.order_duration, data.id])
+        self.__time_orders.append(self.get_sum_result(data))
 
 print(" ***Cafe***")
 inp = input("Log : ").split("/")
