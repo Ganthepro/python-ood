@@ -20,13 +20,9 @@ class LinkedList:
             self.appendHead(name)
             return
         t = self.head
-        temp = t
         while t.next != None:
-            temp = t
             t = t.next
-        print(temp.name)
-        t.next = Node(name, None, temp)
-        # print(t.next.back)
+        t.next = Node(name, None, t)
 
     def find_tail(self):
         try:
@@ -39,30 +35,36 @@ class LinkedList:
 
     def move(self, start, end, direction = "F"):
         how_much = 0
+        output = ""
         self.find_tail()
         if direction == "F":
+            output += "Forward Route: "
             t = self.head
             while t.name != start:
                 t = t.next
             while t.name != end:
-                print(f"{t.name}->",end="")
+                output += f"{t.name}->"
                 how_much += 1
-                t = t.next
-            print(f"{t.name}", end="")
+                if t.next == None:
+                    t = self.head
+                else:   
+                    t = t.next
+            output += f"{t.name}"
         elif direction == "B":
+            output += "Backward Route: "
             t = self.head
             while t.name != start:
                 t = t.next
             while t.name != end:
-                # print(f"{t.name}->",end="")
-                print(t.name)
+                output += f"{t.name}->"
                 how_much += 1
                 if t.back == None:
                     t = self.tail
                 else:
                     t = t.back
-            print(f"{t.name}", end="")
-        print(f",{how_much}")
+            output += f"{t.name}"
+        output += f",{how_much}"
+        return how_much, output
 
     def __str__(self) -> str:
         t = self.head
@@ -73,7 +75,7 @@ class LinkedList:
         output += f"{t.name}"
         return output
 
-inp = input("Enter Input : ").split("/")
+inp = input("Input Station name/Source, Destination, Direction(optional): ").split("/")
 stations = inp[0].split(",")
 option = inp[1].split(",")
 railway = LinkedList()
@@ -81,15 +83,29 @@ railway = LinkedList()
 def move_forward():
     for station in stations:
         railway.appendLast(station)
-    railway.move(option[0], option[1])
+    temp, output = railway.move(option[0], option[1], "F")
+    print(output)
 
 def move_backward():
     for station in stations:
         railway.appendLast(station)
-    print(railway)
-    railway.move(option[0], option[1], "B")
+    temp, output = railway.move(option[0], option[1], "B")
+    print(output)
 
-if option[2] == "F":
-    move_forward()
-elif option[2] == "B":
-    move_backward()
+try:
+    if option[2] == "F":
+        move_forward()
+    elif option[2] == "B":
+        move_backward()
+except:
+    for station in stations:
+        railway.appendLast(station)
+    temp, output = railway.move(option[0], option[1], "F")
+    temp2, output2 = railway.move(option[0], option[1], "B")
+    if temp < temp2:
+        print(output)
+    elif temp > temp2:
+        print(output2)
+    else:
+        print(output)
+        print(output2)
