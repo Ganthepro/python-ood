@@ -13,11 +13,10 @@ class Stack:
     def top(self):
         if len(self.items) == 0:
             return ''
-        return self.items[-1]
+        return self.items[-1]    
     
 S = Stack()
 inp = input()
-# inp = "a+b*c-d"
 output = ""
 for i in inp:
     if i == "(":

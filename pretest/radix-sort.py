@@ -1,6 +1,3 @@
-from networkx import is_empty
-
-
 class Queue:
     def __init__(self) -> None:
         self.items = []
