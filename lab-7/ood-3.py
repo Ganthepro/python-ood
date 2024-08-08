@@ -1,6 +1,3 @@
-import re
-
-
 class Node:
     def __init__(self, data):
         self.data = data
@@ -13,6 +10,7 @@ class Node:
 class BST:
     def __init__(self):
         self.root: Node = None
+        self.visited = []
 
     def insert(self, data):
         if self.root == None:
@@ -53,9 +51,12 @@ class BST:
                     return temp.right
                 else:
                     temp = temp.right
-        return []
     
-    def dfs(self, node):
+    def preOrder(self, node):
+        if node != None:
+            self.visited.append(node.data)
+            self.preOrder(node.left)
+            self.preOrder(node.right)
 
 
 T = BST()
@@ -68,5 +69,5 @@ print(f"Input: root = {inp}, val = {val}")
 if child == []:
     print(f"Output: {[]}")
 else:
-    # print(f"Output: {list(map(int, [str(child), str(child.left), str(child.right)]))}")
-    T.printTree(child)
+    T.preOrder(child)
+    print(f"Output: {T.visited}")
