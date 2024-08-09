@@ -63,19 +63,22 @@ class BinarySearchTree:
             return self.findInorderSuccessor(node.right, True)
         else:
             if node.left == None:
-                temp = node.data
-                return temp
+                return node
             return self.findInorderSuccessor(node.left, flag)
         
     def deleteChild(self, successor, node: Node, tempNode: Node, flag = False):
-        if node == None or node.data == successor:
+        if node == None or node.data == successor.data:
             if node.root.left == node:
                 node.root.left = None
             elif node.root.right == node:
                 node.root.right = None
-            tempNode.data = successor
+            if node.right:
+                node.root.left = node.right
+            elif node.left:
+                node.root.left = node.left
+            tempNode.data = node.data
             return node
-        if successor < node.data:
+        if successor.data < node.data:
             return self.deleteChild(successor, node.left, tempNode, True)
         return self.deleteChild(successor, node.right, tempNode)
         
